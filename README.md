@@ -77,4 +77,4 @@ Replace `YOUR-USERNAME` with your GitHub username. If this folder is already a G
 Only claim features you have personally tested.
 ## 📸 Application Screenshot
 
-![SecureScan Demo](securescan-demo.png)
+![SecureScan Demo](./scrennshot/securescan-demo.png)
