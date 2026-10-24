@@ -75,3 +75,6 @@ Replace `YOUR-USERNAME` with your GitHub username. If this folder is already a G
 - Created a responsive dashboard with findings and remediation guidance.
 
 Only claim features you have personally tested.
+## 📸 Application Screenshot
+
+![SecureScan Demo](securescan-demo.png)
