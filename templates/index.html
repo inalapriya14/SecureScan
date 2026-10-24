@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SecureScan | Website Security Checker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('index') }}"><span class="shield">◆</span> SecureScan</a>
+    <span class="tag">NON-INTRUSIVE WEBSITE CHECKER</span>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <p class="eyebrow">PYTHON SECURITY PROJECT</p>
+      <h1>Check your website's <span>security posture.</span></h1>
+      <p class="intro">Review HTTPS, browser security headers, and cookie attributes in a quick, readable report.</p>
+      <form method="post" class="scan-form">
+        <label for="url">Website URL</label>
+        <div class="input-row">
+          <input id="url" name="url" type="url" placeholder="https://example.com"
+                 value="{{ submitted_url }}" maxlength="2048" required>
+          <button type="submit">Scan website <span aria-hidden="true">→</span></button>
+        </div>
+        <p class="hint">Only scan websites you own or have permission to assess. One page is checked; no exploit attempts are made.</p>
+      </form>
+    </section>
+
+    {% if error %}
+      <div class="alert" role="alert"><strong>Scan could not complete.</strong> {{ error }}</div>
+    {% endif %}
+
+    {% if report %}
+      <section class="report">
+        <div class="report-heading">
+          <div>
+            <p class="eyebrow">SCAN REPORT</p>
+            <h2>{{ report.url }}</h2>
+            <p class="muted">HTTP status: {{ report.status_code }} · Server header: {{ report.server }}</p>
+          </div>
+          <div class="score">
+            <strong>{{ report.score }}<small>/100</small></strong>
+            <span>Header score</span>
+          </div>
+        </div>
+        <div class="notice">{{ report.note }}</div>
+        <h3>Findings</h3>
+        <div class="findings">
+          {% for item in report.findings %}
+            <article class="finding">
+              <div class="finding-top">
+                <h4>{{ item.name }}</h4>
+                <span class="status {{ item.status }}">{{ item.status }}</span>
+              </div>
+              <p>{{ item.detail }}</p>
+              <p class="recommendation"><strong>Recommendation:</strong> {{ item.recommendation }}</p>
+            </article>
+          {% endfor %}
+        </div>
+
+        {% if report.cookies %}
+          <h3>Cookie attribute details</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Cookie name</th><th>Missing attributes observed</th></tr></thead>
+              <tbody>
+              {% for cookie in report.cookies %}
+                <tr><td>{{ cookie.cookie }}</td><td>{{ cookie.missing|join(", ") if cookie.missing else "None of the checked attributes" }}</td></tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
+        <p class="muted small">The score is a simple portfolio-project heuristic, not a formal security rating. Header presence does not prove that a configuration is correct.</p>
+      </section>
+    {% endif %}
+
+    <section class="feature-grid">
+      <article><span>01</span><h3>HTTPS & transport</h3><p>Checks the supplied URL scheme and relies on normal certificate validation.</p></article>
+      <article><span>02</span><h3>Security headers</h3><p>Checks for six commonly recommended browser security headers.</p></article>
+      <article><span>03</span><h3>Cookie attributes</h3><p>Reviews cookie flags present in the response headers.</p></article>
+    </section>
+  </main>
+  <footer>SecureScan · Built with Python and Flask · For authorized defensive testing</footer>
+</body>
+</html>
